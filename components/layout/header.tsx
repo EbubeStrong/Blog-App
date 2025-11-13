@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 function Header() {
   const navItems = [
@@ -28,6 +29,18 @@ function Header() {
               ))
             }
           </nav>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden md:block">
+            {/* Search */}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button className="cursor-pointer"  variant={"default"} asChild>
+              <Link href="/auth">Login</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
