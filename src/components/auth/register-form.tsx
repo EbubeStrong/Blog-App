@@ -7,6 +7,8 @@ import { useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Eye, EyeClosedIcon } from "lucide-react"
+import { signUp } from "@/lib/auth-client"
+import { toast } from "sonner"
 
 const registerFormSchema = z.object({
     name: z.string().min(3, 'Name must be at least 3 characters long!'),
@@ -20,7 +22,12 @@ const registerFormSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
-function RegisterForm() {
+
+interface RegisterFormProps {
+    onSuccess?: () => void;
+}
+
+function RegisterForm({ onSuccess }: RegisterFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     // false = hidden, true = visible
     const [showPassword, setShowPassword] = useState({
@@ -43,9 +50,24 @@ function RegisterForm() {
         setIsLoading(true)
 
         try {
-            console.log(values)
-        } catch (error) {
+            const {error} = await signUp.email({
+                name: values.name,
+                email: values.email,
+                password: values.password,
+            })
+            if (error) {
+                toast.error('Failed to create account. Please try again')
+                return
+            }
+            toast.success('Account created successfully! Please sign in with email & password.')
 
+            if(onSuccess) {
+                onSuccess();
+            }
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setIsLoading(false);
         }
     }
 
