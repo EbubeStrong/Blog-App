@@ -7,6 +7,9 @@ import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeClosedIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 //schema
@@ -22,6 +25,8 @@ function LoginForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(true);
 
+    const router = useRouter();
+
     // Initialize form values
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginFormSchema),
@@ -35,9 +40,23 @@ function LoginForm() {
         setIsLoading(true)
 
         try {
-            console.log(values)
+            const {error} = await signIn.email({
+                email: values.email,
+                password: values.password,
+                rememberMe: true
+            })
+            if (error) {
+                // handle error
+                toast.error('Failed to login. Please check your credentials and try again.')
+                return
+            }
+            toast.success('Successfully logged in!')
+            router.push('/')
+            // console.log(values)
         } catch (error) {
-
+            console.log(error)
+        }finally {
+            setIsLoading(false)
         }
     }
 
