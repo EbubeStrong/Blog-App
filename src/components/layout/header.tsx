@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useSession } from "@/lib/auth-client";
 import UserMenu from "../auth/user-menu";
+import ThemeToggle from "../theme/theme-toggle";
 
 function Header() {
   const { data: session, isPending } = useSession()
@@ -39,6 +40,9 @@ function Header() {
           <div className="hidden md:block">
             {/* Search */}
           </div>
+
+          {/* placeholder for theme toggle */}
+          <ThemeToggle />
 
           <div className="flex items-center gap-2">
             {
