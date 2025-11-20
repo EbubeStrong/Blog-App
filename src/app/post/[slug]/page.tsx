@@ -1,6 +1,6 @@
 function PostDetailsPage() {
     return ( 
-        <div></div>
+        <div>details</div>
      );
 }
 
