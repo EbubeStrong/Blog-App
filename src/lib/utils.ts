@@ -15,3 +15,12 @@ export function slugify(text: string): string{
     .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
     .replace(/\-\-+/g, '-');        // Replace multiple - with single -
 }
+
+
+export function formatDate(dateString: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+  }).format(new Date(dateString));
+}
