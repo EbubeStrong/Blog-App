@@ -1,7 +1,7 @@
-// import { desc } from "drizzle-orm";
-// import { db } from ".";
-// import { posts } from "./schema";
-
+import { desc, eq } from "drizzle-orm";
+import { db } from ".";
+import { posts } from "./schema";
+import { PostProps } from "../types";
 
 
 // // get all posts
@@ -20,12 +20,6 @@
 //         return 
 //     }
 // }
-
-import { desc } from "drizzle-orm";
-import { db } from ".";
-import { posts } from "./schema";
-import { PostProps } from "../types";
-
 
 export async function getAllPosts(): Promise<PostProps[]> {
   try {
@@ -50,6 +44,22 @@ export async function getAllPosts(): Promise<PostProps[]> {
     return normalized; // matches PostProps[] (dates as strings)
   } catch (error) {
     console.log(error);
-    return []; // FIX: return array, NOT an object
+    return []; //  return array, NOT an object
   }
+}
+
+
+export async function getPostBySlug(slug: string){
+    try {
+        const post = await db.query.posts.findFirst({
+            where: eq(posts.slug, slug),
+            with: {
+                author: true
+            }
+        })
+        return post
+    } catch (error) {
+        console.log(error)
+        return null
+    }
 }

@@ -7,7 +7,7 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
-import { createPost } from '@/actions/post-actions';
+import { createPost, updatePost } from '@/actions/post-actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -22,14 +22,30 @@ const postSchema = z.object({
 
 type PostFormValues = z.infer<typeof postSchema>
 
-function PostForm() {
+
+interface PostFormProps {
+    isEditing?: boolean;
+    post?: {
+        id: string;
+        title: string;
+        description?: string;
+        content?: string;
+        slug: string;
+    };
+}
+
+function PostForm({ isEditing, post }: PostFormProps) {
     const [isPending, startTransition] = useTransition();
     const router = useRouter()
 
 
     const { register, handleSubmit, formState: { errors } } = useForm<PostFormValues>({
         resolver: zodResolver(postSchema),
-        defaultValues: {
+        defaultValues: isEditing && post ? {
+            title: post.title,
+            description: post.description || '',
+            content: post.content || ''
+        } : {
             title: '',
             description: '',
             content: ''
@@ -47,18 +63,27 @@ function PostForm() {
                 formData.append('content', data.content);
 
                 // Call the server action to create a new post
-                const response = await createPost(formData);
-                console.log('Server Response:', response);
+                let res
 
-                if(response.success){
-                    toast.success('Post created successfully')
+                if (isEditing && post) {
+                    // post.id is a string (UUID). Pass it directly to the server action.
+                    res = await updatePost(post.id, formData);
+                } else {
+                    res = await createPost(formData)
+                }
+
+                console.log('Server Response:', res);
+
+                if (res.success) {
+                    toast.success(isEditing ? 'Post updated successfully!' : 'Post created successfully!')
                     router.refresh()
                     router.push('/')
-                }else{
-                    toast.warning(response.message)
+                } else {
+                    toast.warning(res.message)
                 }
             } catch (error) {
                 toast.error('Failed to create post')
+                console.error(error)
             }
         });
     };
@@ -67,29 +92,29 @@ function PostForm() {
         <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-6'>
             <div className="space-y-2">
                 <Label htmlFor='title'>Title</Label>
-                <Input id="title" placeholder='Enter post title' {...register('title')} 
-                disabled={isPending}
+                <Input id="title" placeholder='Enter post title' {...register('title')}
+                    disabled={isPending}
                 />
                 {errors?.title && <p className="text-sm text-red-600">{errors.title.message}</p>}
             </div>
 
             <div className="space-y-2">
                 <Label htmlFor='description'>Description</Label>
-                <Textarea id="description" placeholder='Enter a short post description' {...register('description')} 
-                disabled={isPending}
+                <Textarea id="description" placeholder='Enter a short post description' {...register('description')}
+                    disabled={isPending}
                 />
                 {errors?.description && <p className="text-sm text-red-600">{errors.description.message}</p>}
             </div>
 
             <div className="space-y-2">
                 <Label htmlFor='content'>Content</Label>
-                <Textarea id="content" placeholder='Enter post content' className='min-h-[250px] resize-none' {...register('content')} 
-                disabled={isPending}
+                <Textarea id="content" placeholder='Enter post content' className='min-h-[250px] resize-none' {...register('content')}
+                    disabled={isPending}
                 />
                 {errors?.content && <p className="text-sm text-red-600">{errors.content.message}</p>}
             </div>
 
-            <Button className='mt-5 w-full' type='submit' disabled={isPending}>{isPending ? 'Saving...' : 'Create Post'}</Button>
+            <Button className='mt-5 w-full' type='submit' disabled={isPending}>{isPending ? 'Saving...' : isEditing ? 'Update Post' : 'Create Post'}</Button>
         </form>
     );
 }
