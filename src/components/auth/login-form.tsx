@@ -10,6 +10,7 @@ import { Button } from "../ui/button";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { clear } from "console";
 
 
 //schema
@@ -47,6 +48,7 @@ function LoginForm() {
             })
             if (error) {
                 // handle error
+                console.log(error);
                 toast.error('Failed to login. Please check your credentials and try again.')
                 return
             }

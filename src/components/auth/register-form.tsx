@@ -56,6 +56,7 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
                 password: values.password,
             })
             if (error) {
+                console.log(error);
                 toast.error('Failed to create account. Please try again')
                 return
             }
@@ -65,7 +66,7 @@ function RegisterForm({ onSuccess }: RegisterFormProps) {
                 onSuccess();
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }finally{
             setIsLoading(false);
         }
