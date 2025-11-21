@@ -1,20 +1,13 @@
 import PostList from "@/components/post/post-list";
 import { getAllPosts } from "@/lib/db/queries";
 import { Metadata } from "next";
+import type { PostProps } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Ebube Strong Blog",
   description: "Your go-to platform for insightful articles and updates.",
 };
 
-interface PostProps {
-  id: string;
-  title: string;
-  description?: string;
-  slug: string;
-  createdAt: string;
-  author: { name: string };
-}
 
 export default async function Home() {
   // Correct: Add the type HERE if needed
