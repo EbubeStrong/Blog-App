@@ -2,7 +2,6 @@ import Container from "@/components/layout/container";
 import PostForm from "@/components/post/post-form";
 import { auth } from "@/lib/auth";
 import { getPostBySlug } from "@/lib/db/queries";
-import { not } from "drizzle-orm";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
