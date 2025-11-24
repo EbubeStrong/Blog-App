@@ -1,3 +1,4 @@
+"use client";
 import { PostCardsProps } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import Link from "next/link";

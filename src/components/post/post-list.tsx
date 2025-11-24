@@ -1,3 +1,4 @@
+"use client";
 import { PostListsProps } from "@/lib/types";
 import PostCard from "./post-card";
 
