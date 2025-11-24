@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { clear } from "console";
 
 
 //schema
