@@ -27,10 +27,10 @@ function Header() {
           <Link href="/" className="font-bold text-xl">
             Blog App
           </Link>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-3 md:gap-6">
             {
               navItems.map(navItem => (
-                <Link key={navItem.href} href={navItem.href} className={cn('text-sm font-medium transition-colors font-bold hover:text-primary')}>{navItem.label}</Link>
+                <Link key={navItem.href} href={navItem.href} className={cn('text-sm font-bold transition-colors hover:text-primary')}>{navItem.label}</Link>
               ))
             }
           </nav>
